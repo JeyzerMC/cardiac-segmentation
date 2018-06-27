@@ -1,3 +1,5 @@
+A fork of [vuptran/cardiac-segmentation](https://github.com/vuptran/cardiac-segmentation). This version of the project aim to add Windows 10 compatibility, Python 3.6 support as well as some general improvements.
+
 # A Fully Convolutional Neural Network for Cardiac Segmentation
 
 A Keras re-implementation of the original Caffe FCN model in the arXiv paper [A Fully Convolutional Neural Network for Cardiac Segmentation in Short-Axis MRI
