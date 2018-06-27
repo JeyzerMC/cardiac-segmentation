@@ -1,0 +1,4 @@
+.vscode/
+model_logs/
+RVSC_data/
+__pycache__/
