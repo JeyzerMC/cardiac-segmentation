@@ -38,7 +38,7 @@ def reshape(ndarray, to_shape):
     else: # zero pad along h dimension
         pad_h = (h_out - h_in)
         rem = pad_h % 2
-        pad_dim_h = (pad_h/2, pad_h/2 + rem)
+        pad_dim_h = (int(pad_h/2), int(pad_h/2 + rem))
         # npad is tuple of (n_before, n_after) for each (h,w,d) dimension
         npad = (pad_dim_h, (0,0), (0,0))
         ndarray = np.pad(ndarray, npad, 'constant', constant_values=0)
@@ -48,7 +48,7 @@ def reshape(ndarray, to_shape):
     else: # zero pad along w dimension
         pad_w = (w_out - w_in)
         rem = pad_w % 2
-        pad_dim_w = (pad_w/2, pad_w/2 + rem)
+        pad_dim_w = (int(pad_w/2), int(pad_w/2 + rem))
         npad = ((0,0), pad_dim_w, (0,0))
         ndarray = np.pad(ndarray, npad, 'constant', constant_values=0)
     
