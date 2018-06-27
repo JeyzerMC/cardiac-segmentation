@@ -5,7 +5,6 @@ import os, fnmatch, sys
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
-from itertools import izip
 
 from fcn_model import fcn_model
 from helpers import center_crop, lr_poly_decay
@@ -17,7 +16,7 @@ RVSC_ROOT_PATH = 'RVSC_data'
 
 TRAIN_PATH = os.path.join(RVSC_ROOT_PATH, 'TrainingSet')
 
-class Contour(object):
+class Contour:
     def __init__(self, ctr_path):
         self.ctr_path = ctr_path
         match = re.search(r'P(\d{02})-(\d{04})-.*', ctr_path)
@@ -60,7 +59,7 @@ def map_all_contours(data_path, contour_type, shuffle=True):
         print('Shuffling data')
         np.random.shuffle(contours)
     print('Number of examples: {:d}'.format(len(contours)))
-    contours = map(Contour, contours)
+    contours = list(map(Contour, contours))
     
     return contours
 
@@ -85,11 +84,10 @@ if __name__== '__main__':
     contour_type = sys.argv[1]
     os.environ['CUDA_VISIBLE_DEVICES'] = sys.argv[2]
     crop_size = 200
-
     print('Mapping ground truth '+contour_type+' contours to images in train...')
     train_ctrs = map_all_contours(TRAIN_PATH, contour_type, shuffle=True)
     print('Done mapping training set')
-    split = int(0.1*len(train_ctrs))
+    split = int(0.1*len(list(train_ctrs)))
     dev_ctrs = train_ctrs[0:split]
     train_ctrs = train_ctrs[split:]
     print('\nBuilding train dataset ...')
@@ -123,7 +121,7 @@ if __name__== '__main__':
                                     batch_size=mini_batch_size, seed=seed)
     mask_generator = mask_datagen.flow(mask_train, shuffle=False,
                                     batch_size=mini_batch_size, seed=seed)
-    train_generator = izip(image_generator, mask_generator)
+    train_generator = zip(image_generator, mask_generator)
 
     max_iter = (len(train_ctrs) / mini_batch_size) * epochs
     curr_iter = 0
@@ -133,7 +131,7 @@ if __name__== '__main__':
         print('\nMain Epoch {:d}\n'.format(e+1))
         print('\nLearning rate: {:6f}\n'.format(lrate))
         train_result = []
-        for iteration in range(len(img_train)/mini_batch_size):
+        for iteration in range(int(len(img_train)/mini_batch_size)):
             img, mask = next(train_generator)
             res = model.train_on_batch(img, mask)
             curr_iter += 1
@@ -142,11 +140,11 @@ if __name__== '__main__':
             train_result.append(res)
         train_result = np.asarray(train_result)
         train_result = np.mean(train_result, axis=0).round(decimals=10)
-        print('Train result {:s}:\n{:s}'.format(model.metrics_names, train_result))
+        print('Train result {:s}:\n{:s}'.format(str(model.metrics_names), str(train_result)))
         print('\nEvaluating dev set ...')
         result = model.evaluate(img_dev, mask_dev, batch_size=32)
         result = np.round(result, decimals=10)
-        print('\nDev set result {:s}:\n{:s}'.format(model.metrics_names, result))
+        print('\nDev set result {:s}:\n{:s}'.format(str(model.metrics_names), str(result)))
         save_file = '_'.join(['rvsc', contour_type,
                               'epoch', str(e+1)]) + '.h5'
         if not os.path.exists('model_logs'):

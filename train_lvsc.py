@@ -7,7 +7,6 @@ from skimage import measure, io
 from multiprocessing import Pool
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
-from itertools import izip
 
 from fcn_model import fcn_model
 from helpers import center_crop, lr_poly_decay
@@ -84,7 +83,7 @@ def generate_all_contours(contours, chunk_size, crop_size, shuffle=False):
         if shuffle:
             print('\nShuffling data at each epoch\n')
             np.random.shuffle(contours)
-        for i in xrange(num_iter):
+        for i in range(num_iter):
             chunk = contours[(chunk_size*i):(chunk_size*(i+1))]
             if len(chunk) == 0:
                 break
@@ -100,7 +99,7 @@ def generate_all_contours(contours, chunk_size, crop_size, shuffle=False):
 
 def batch_data(dataset, batch_size):
     while True:
-        images, masks = zip(*[next(dataset) for i in xrange(batch_size)])
+        images, masks = zip(*[next(dataset) for i in range(batch_size)])
         images = np.asarray(images)
         masks = np.asarray(masks)
         batch = (images, masks)
@@ -170,7 +169,7 @@ if __name__== '__main__':
                                     batch_size=mini_batch_size, seed=seed)
             aug_masks = mask_datagen.flow(mask_train, shuffle=False,
                                     batch_size=mini_batch_size, seed=seed)
-            train_dataset = izip(aug_images, aug_masks)
+            train_dataset = zip(aug_images, aug_masks)
             for iteration in range(len(img_train)/mini_batch_size):
                 img, mask = next(train_dataset)
                 loss = model.train_on_batch(img, mask, class_weight=None)

@@ -5,7 +5,6 @@ import os, fnmatch, sys
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras import backend as K
-from itertools import izip
 
 from fcn_model import fcn_model
 from helpers import center_crop, lr_poly_decay, get_SAX_SERIES
@@ -136,7 +135,7 @@ if __name__== '__main__':
                                     batch_size=mini_batch_size, seed=seed)
     mask_generator = mask_datagen.flow(mask_train, shuffle=False,
                                     batch_size=mini_batch_size, seed=seed)
-    train_generator = izip(image_generator, mask_generator)
+    train_generator = zip(image_generator, mask_generator)
     
     max_iter = (len(train_ctrs) / mini_batch_size) * epochs
     curr_iter = 0

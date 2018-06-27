@@ -31,8 +31,8 @@ def crop(tensors):
     crop_h, crop_w = (h_dims[1] - h_dims[0]), (w_dims[1] - w_dims[0])
     rem_h = crop_h % 2
     rem_w = crop_w % 2
-    crop_h_dims = (crop_h / 2, crop_h / 2 + rem_h)
-    crop_w_dims = (crop_w / 2, crop_w / 2 + rem_w)
+    crop_h_dims = (int(crop_h / 2), int(crop_h / 2 + rem_h))
+    crop_w_dims = (int(crop_w / 2), int(crop_w / 2 + rem_w))
     cropped = Cropping2D(cropping=(crop_h_dims, crop_w_dims))(tensors[1])
     
     return cropped
