@@ -80,7 +80,7 @@ def export_all_contours(contours, data_path, crop_size):
 
 if __name__== '__main__':
     if len(sys.argv) < 3:
-        sys.exit('Usage: python %s <i/o> <gpu_id>' % sys.argv[0])
+        sys.exit('Usage: python {:s} <i/o> <gpu_id>'.format(sys.argv[0]))
     contour_type = sys.argv[1]
     os.environ['CUDA_VISIBLE_DEVICES'] = sys.argv[2]
     crop_size = 200

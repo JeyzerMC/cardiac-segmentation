@@ -11,6 +11,7 @@ keras = "*"
 scikit-image = "*"
 dicom = "*"
 opencv-python = "*"
+matplotlib = "*"
 
 [dev-packages]
 
